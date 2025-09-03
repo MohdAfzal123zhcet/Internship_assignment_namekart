@@ -1,68 +1,228 @@
+/* ===== Base / Theme ===== */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --bg:black;        /* high-intensity dark blue */
+  --text: #ffffff;
+  --muted: #aab3c5;
+  --accent: #4cafef;
+  --danger: #e53935;
+  --radius: 12px;
+  --space: 12px;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
+* { box-sizing: border-box; }
 
+/* Body + navbar offset */
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
+  padding-top: 60px; /* fixed navbar height space */
+  background: var(--bg);
+  color: var(--text);
   min-height: 100vh;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* ===== Containers ===== */
+.container {
+  max-width: 1100px;
+  margin: 24px auto;
+  padding: 0 16px;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+/* ===== Auth Card (Login / Register) ===== */
+.card {
+  background: #ffffff;
+  color: #000;
+  width: 900px;
+  min-height: 500px;
+  padding: 40px;
+  border-radius: var(--radius);
+  display: grid;
+  gap: 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+  margin: 40px auto;
+}
+.card h2 { margin: 0 0 4px; text-align: center; font-size: 24px; }
+.card input,
+.card button { padding: 14px; font-size: 16px; border-radius: 8px; }
+.card input {
+  border: 1px solid #cfd6e4;
+  outline: none;
+  background: #fff;
+  color: #000;
+}
+.card input:focus { border-color: var(--accent); }
+.card button {
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: background 0.2s, opacity 0.2s;
 }
-button:hover {
-  border-color: #646cff;
+.card button:hover { background: #3b9cdb; }
+
+/* ===== Text helpers ===== */
+.error { color: var(--danger); }
+.muted { color: var(--muted); font-size: 0.9em; }
+
+/* ===== Navbar (fixed, white) ===== */
+.navbar {
+  width: 100%;
+  background:rgb(0, 76, 255);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  position: fixed;      /* top fixed */
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 }
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.navbar-left,
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+/* Button-style links (black -> neon green on hover) */
+.btn-link {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: black;
+  border: 1px solid black;
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.btn-link:hover {
+  background: #7bff00;
+  color: black;
+  border-color: #7bff00;
+}
+
+/* ===== Notes pages (List / Editor / Share) ===== */
+.panel {
+  background: #ffffff;
+  color: #000;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  margin: 24px auto;
+  max-width: 2000px;  /* last chosen wide value */
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 4px 0 16px;
+}
+.toolbar h2 { margin: 0; }
+
+/* Buttons (notes pages) */
+.btn {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  background: #4cafef;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .06s ease, opacity .2s;
+}
+.btn:hover { opacity: .9; }
+.btn:active { transform: translateY(1px); }
+.btn-danger { background: var(--danger); }
+
+/* Notes list */
+.list { list-style: none; margin: 0; padding: 0; }
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 4px;
+  border-bottom: 1px solid #e0e0e0;
+}
+.row:last-child { border-bottom: 0; }
+.title {
+  font-weight: 700;
+  text-decoration: none;
+  color: #0d47a1;  /* final color kept from last occurrence */
+}
+.meta { color: #666; font-size: .9rem; margin-top: 4px; }
+.actions { display: flex; gap: 10px; }
+
+/* Empty state */
+.empty {
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 48px 12px;
+  gap: 8px;
+}
+.empty h3 { margin: 0; }
+.empty p { color: #444; margin: 0 0 8px; }
+
+/* Editor */
+.titleInput {
+  width: 100%;
+  font-size: 20px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #000;
+  margin-bottom: 10px;
+}
+.editor {
+  width: 100%;
+  min-height: 320px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #000;
+  resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+/* Share viewer */
+.viewer {
+  white-space: pre-wrap;
+  background: #fff;
+  color: #000;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+}
+
+/* Tag pills */
+.tags { display: flex; gap: 8px; flex-wrap: wrap; margin: 6px 0 10px; }
+.tag {
+  background: #eef6ff;
+  color: #0b57d0;
+  border: 1px solid #d7e7ff;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: .9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.tag button {
+  all: unset;
+  cursor: pointer;
+  line-height: 1;
 }
