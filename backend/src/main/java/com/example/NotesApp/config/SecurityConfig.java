@@ -65,8 +65,7 @@ public class SecurityConfig {
         // Allow your local dev & Vercel preview/prod
         config.setAllowedOriginPatterns(List.of(
                 "http://localhost:5173",
-                "https://internship-assignment-namekart.vercel.app",
-                "https://*.vercel.app"
+                "https://internship-assignment-namekart.vercel.app/"
         ));
 
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"));
