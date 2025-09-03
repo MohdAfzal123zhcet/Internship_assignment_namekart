@@ -2,7 +2,7 @@ package com.example.NotesApp.auth;
 import jakarta.persistence.*; import java.time.Instant;
 import java.util.UUID;
 
-import lombok.*;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection; import org.springframework.security.core.GrantedAuthority;
 
