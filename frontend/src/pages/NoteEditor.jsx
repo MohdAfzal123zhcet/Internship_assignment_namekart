@@ -8,6 +8,7 @@ export default function NoteEditor() {
   const { id } = useParams();
   const [note, setNote] = useState(null);
   const [err, setErr] = useState("");
+  const [success, setSuccess] = useState("");   // ✅ added
   const [shareUrl, setShareUrl] = useState("");
 
   useEffect(() => { (async () => setNote(await getNote(id)))(); }, [id]);
@@ -20,11 +21,14 @@ export default function NoteEditor() {
       });
       setNote(updated);
       setErr("");
+      setSuccess("✅ Note saved successfully");   // ✅ show success
+      setTimeout(() => setSuccess(""), 2000);     // auto-clear after 2s
     } catch (ex) {
       if (ex?.response?.status === 409) {
         const sv = ex.response.data.serverVersion;
         setErr(`Version conflict. Server version is ${sv}. Please reload to continue.`);
       } else setErr(ex?.response?.data?.message || "Save failed");
+      setSuccess("");   // clear success if error
     }
   }
 
@@ -48,6 +52,7 @@ export default function NoteEditor() {
         </div>
 
         {err && <p className="error">{err}</p>}
+        {success && <p className="success">{success}</p>}   {/* ✅ success message */}
 
         <input
           className="titleInput"
