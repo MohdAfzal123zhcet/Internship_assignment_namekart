@@ -33,7 +33,7 @@ body {
 .card {
   background: #ffffff;
   color: #000;
-  width: 100%;
+  width: 60%;
   min-height: 500px;
   padding: 40px;
   border-radius: var(--radius);
