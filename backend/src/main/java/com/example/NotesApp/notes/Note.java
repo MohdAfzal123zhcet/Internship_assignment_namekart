@@ -16,8 +16,6 @@ public class Note {
 
     // ---- Identity ----
     @Id
-    // If your DB column type is UUID, prefer UUID here. If it's TEXT/VARCHAR keep String.
-    // Using String to minimize ripple changes since your code used String earlier.
     private String id = UUID.randomUUID().toString();
 
     // ---- Ownership ----
@@ -28,14 +26,13 @@ public class Note {
     @Column(nullable = false)
     private String title;
 
-    @Lob
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "TEXT")   // removed @Lob
     private String content;
 
     // ---- Tags (JSONB) ----
     @Column(name = "tags_json", nullable = false, columnDefinition = "jsonb")
-    @JdbcTypeCode(SqlTypes.JSON)               // <-- tell Hibernate to bind as JSON (not VARCHAR)
-    private List<String> tags = new ArrayList<>();  // <-- use a JSON-friendly type, not String
+    @JdbcTypeCode(SqlTypes.JSON)
+    private List<String> tags = new ArrayList<>();
 
     // ---- Tracking ----
     @UpdateTimestamp
@@ -44,9 +41,9 @@ public class Note {
 
     @Version
     @Column(nullable = false)
-    private int version = 1;
+    private int version;   // removed "= 1", let Hibernate manage
 
-    // ---- Lifecycle hooks (keep updatedAt safe for inserts as well) ----
+    // ---- Lifecycle hooks ----
     @PrePersist
     void onCreate() {
         if (updatedAt == null) updatedAt = Instant.now();
