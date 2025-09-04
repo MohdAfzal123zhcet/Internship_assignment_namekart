@@ -1,50 +1,84 @@
 package com.example.NotesApp.notes;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.type.SqlTypes;
+
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "note")
 public class Note {
 
+    // ---- Identity ----
     @Id
+    // If your DB column type is UUID, prefer UUID here. If it's TEXT/VARCHAR keep String.
+    // Using String to minimize ripple changes since your code used String earlier.
     private String id = UUID.randomUUID().toString();
 
+    // ---- Ownership ----
     @Column(nullable = false)
     private String userId;
 
+    // ---- Content ----
     @Column(nullable = false)
     private String title;
 
     @Lob
-    @Column(nullable = false, columnDefinition = "TEXT")   // MEDIUMTEXT -> TEXT
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "tags_json", nullable = false, columnDefinition = "JSONB") // JSON -> JSONB
-    private String tagsJson = "[]";
+    // ---- Tags (JSONB) ----
+    @Column(name = "tags_json", nullable = false, columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)               // <-- tell Hibernate to bind as JSON (not VARCHAR)
+    private List<String> tags = new ArrayList<>();  // <-- use a JSON-friendly type, not String
 
+    // ---- Tracking ----
+    @UpdateTimestamp
     @Column(nullable = false)
     private Instant updatedAt = Instant.now();
 
+    @Version
     @Column(nullable = false)
     private int version = 1;
 
-    // setters
-    public void setId(String id) { this.id = id; }
-    public void setUserId(String userId) { this.userId = userId; }
-    public void setTitle(String title) { this.title = title; }
-    public void setContent(String content) { this.content = content; }
-    public void setTagsJson(String tagsJson) { this.tagsJson = tagsJson; }
-    public void setUpdatedAt(Instant updatedAt) { this.updatedAt = updatedAt; }
-    public void setVersion(int version) { this.version = version; }
+    // ---- Lifecycle hooks (keep updatedAt safe for inserts as well) ----
+    @PrePersist
+    void onCreate() {
+        if (updatedAt == null) updatedAt = Instant.now();
+        if (id == null || id.isBlank()) id = UUID.randomUUID().toString();
+        if (tags == null) tags = new ArrayList<>();
+    }
 
-    // getters
+    @PreUpdate
+    void onUpdate() {
+        updatedAt = Instant.now();
+        if (tags == null) tags = new ArrayList<>();
+    }
+
+    // ---- Getters / Setters ----
     public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+
     public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
+
     public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+
     public String getContent() { return content; }
-    public String getTagsJson() { return tagsJson; }
+    public void setContent(String content) { this.content = content; }
+
+    public List<String> getTags() { return tags; }
+    public void setTags(List<String> tags) { this.tags = (tags != null) ? tags : new ArrayList<>(); }
+
     public Instant getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(Instant updatedAt) { this.updatedAt = updatedAt; }
+
     public int getVersion() { return version; }
+    public void setVersion(int version) { this.version = version; }
 }
